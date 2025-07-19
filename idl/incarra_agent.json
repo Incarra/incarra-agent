@@ -1,0 +1,728 @@
+{
+  "version": "0.1.0",
+  "name": "incarra_agent",
+  "types": [
+    {
+      "name": "InteractionType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "ResearchQuery"
+          },
+          {
+            "name": "DataAnalysis"
+          },
+          {
+            "name": "Conversation"
+          },
+          {
+            "name": "ProblemSolving"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CarvCredential",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "credentialType",
+            "type": "string"
+          },
+          {
+            "name": "credentialData",
+            "type": "string"
+          },
+          {
+            "name": "issuer",
+            "type": "string"
+          },
+          {
+            "name": "issuedAt",
+            "type": "i64"
+          },
+          {
+            "name": "isVerified",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CarvAchievement",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "score",
+            "type": "u64"
+          },
+          {
+            "name": "earnedAt",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IncarraContext",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "agentName",
+            "type": "string"
+          },
+          {
+            "name": "personality",
+            "type": "string"
+          },
+          {
+            "name": "level",
+            "type": "u64"
+          },
+          {
+            "name": "experience",
+            "type": "u64"
+          },
+          {
+            "name": "reputation",
+            "type": "u64"
+          },
+          {
+            "name": "knowledgeAreas",
+            "type": {
+              "vec": "string"
+            }
+          },
+          {
+            "name": "totalInteractions",
+            "type": "u64"
+          },
+          {
+            "name": "researchProjects",
+            "type": "u64"
+          },
+          {
+            "name": "aiConversations",
+            "type": "u64"
+          },
+          {
+            "name": "carvId",
+            "type": "string"
+          },
+          {
+            "name": "carvVerified",
+            "type": "bool"
+          },
+          {
+            "name": "reputationScore",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CarvProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "carvId",
+            "type": "string"
+          },
+          {
+            "name": "isVerified",
+            "type": "bool"
+          },
+          {
+            "name": "reputationScore",
+            "type": "u64"
+          },
+          {
+            "name": "credentialsCount",
+            "type": "u64"
+          },
+          {
+            "name": "achievementsCount",
+            "type": "u64"
+          },
+          {
+            "name": "totalInteractions",
+            "type": "u64"
+          },
+          {
+            "name": "level",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "instructions": [
+    {
+      "name": "createIncarraAgent",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "agentName",
+          "type": "string"
+        },
+        {
+          "name": "personality",
+          "type": "string"
+        },
+        {
+          "name": "carvId",
+          "type": "string"
+        },
+        {
+          "name": "verificationSignature",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "interactWithIncarra",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "interactionType",
+          "type": {
+            "defined": "InteractionType"
+          }
+        },
+        {
+          "name": "experienceGained",
+          "type": "u64"
+        },
+        {
+          "name": "contextData",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "addKnowledgeArea",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "knowledgeArea",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "verifyCarvId",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "verificationProof",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "addCredential",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "credentialType",
+          "type": "string"
+        },
+        {
+          "name": "credentialData",
+          "type": "string"
+        },
+        {
+          "name": "issuer",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "addAchievement",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "achievementName",
+          "type": "string"
+        },
+        {
+          "name": "achievementDescription",
+          "type": "string"
+        },
+        {
+          "name": "achievementScore",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "updatePersonality",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "newPersonality",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "getIncarraContext",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "returns": {
+        "defined": "IncarraContext"
+      }
+    },
+    {
+      "name": "getCarvProfile",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "returns": {
+        "defined": "CarvProfile"
+      }
+    },
+    {
+      "name": "deactivateIncarra",
+      "accounts": [
+        {
+          "name": "incarraAgent",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "IncarraAgent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "agentName",
+            "type": "string"
+          },
+          {
+            "name": "personality",
+            "type": "string"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "lastInteraction",
+            "type": "i64"
+          },
+          {
+            "name": "carvId",
+            "type": "string"
+          },
+          {
+            "name": "carvVerified",
+            "type": "bool"
+          },
+          {
+            "name": "verificationSignature",
+            "type": "string"
+          },
+          {
+            "name": "reputationScore",
+            "type": "u64"
+          },
+          {
+            "name": "credentials",
+            "type": {
+              "vec": {
+                "defined": "CarvCredential"
+              }
+            }
+          },
+          {
+            "name": "achievements",
+            "type": {
+              "vec": {
+                "defined": "CarvAchievement"
+              }
+            }
+          },
+          {
+            "name": "level",
+            "type": "u64"
+          },
+          {
+            "name": "experience",
+            "type": "u64"
+          },
+          {
+            "name": "reputation",
+            "type": "u64"
+          },
+          {
+            "name": "totalInteractions",
+            "type": "u64"
+          },
+          {
+            "name": "researchProjects",
+            "type": "u64"
+          },
+          {
+            "name": "dataSourcesConnected",
+            "type": "u64"
+          },
+          {
+            "name": "aiConversations",
+            "type": "u64"
+          },
+          {
+            "name": "knowledgeAreas",
+            "type": {
+              "vec": "string"
+            }
+          },
+          {
+            "name": "isActive",
+            "type": "bool"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "IncarraAgentCreated",
+      "fields": [
+        {
+          "name": "agentId",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "owner",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "agentName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "carvId",
+          "type": "string",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "IncarraInteraction",
+      "fields": [
+        {
+          "name": "agentId",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "interactionType",
+          "type": {
+            "defined": "InteractionType"
+          },
+          "index": false
+        },
+        {
+          "name": "experienceGained",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "newReputation",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "IncarraLevelUp",
+      "fields": [
+        {
+          "name": "agentId",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "oldLevel",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "newLevel",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "totalExperience",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "CarvIdVerified",
+      "fields": [
+        {
+          "name": "agentId",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "carvId",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "CredentialAdded",
+      "fields": [
+        {
+          "name": "agentId",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "credentialType",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "issuer",
+          "type": "string",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "AchievementEarned",
+      "fields": [
+        {
+          "name": "agentId",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "achievementName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "score",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "KnowledgeAreaAdded",
+      "fields": [
+        {
+          "name": "agentId",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "knowledgeArea",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "totalAreas",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "AgentNameTooLong",
+      "msg": "Agent name is too long (max 50 characters)."
+    },
+    {
+      "code": 6001,
+      "name": "PersonalityTooLong",
+      "msg": "Personality description is too long (max 200 characters)."
+    },
+    {
+      "code": 6002,
+      "name": "KnowledgeAreaTooLong",
+      "msg": "Knowledge area name is too long (max 30 characters)."
+    },
+    {
+      "code": 6003,
+      "name": "TooManyKnowledgeAreas",
+      "msg": "Too many knowledge areas (max 20)."
+    },
+    {
+      "code": 6004,
+      "name": "AgentInactive",
+      "msg": "Agent is currently inactive."
+    },
+    {
+      "code": 6005,
+      "name": "InvalidCarvId",
+      "msg": "Invalid Carv ID format."
+    },
+    {
+      "code": 6006,
+      "name": "CarvIdNotVerified",
+      "msg": "Carv ID is not verified."
+    },
+    {
+      "code": 6007,
+      "name": "InvalidVerificationProof",
+      "msg": "Invalid verification proof."
+    },
+    {
+      "code": 6008,
+      "name": "TooManyCredentials",
+      "msg": "Too many credentials (max 10)."
+    },
+    {
+      "code": 6009,
+      "name": "TooManyAchievements",
+      "msg": "Too many achievements (max 20)."
+    }
+  ]
+}
